@@ -2,7 +2,7 @@
 
 
 <PongBall>:
-    size: 50, 50
+    size: 20, 20
     canvas:
         Ellipse:
             pos: self.pos
@@ -11,9 +11,13 @@
 <PongPaddle>:
     size: 25, 200
     canvas:
-        Rectangle:
+        Color: 
+            rgba: self.color
+        
+        RoundedRectangle:
             pos: self.pos
             size: self.size
+            radius: [15]
 
 
 <PongGame>:
@@ -48,8 +52,12 @@
         id: player_left
         x: root.x
         center_y: root.center_y
+        color: 255, 69, 0
+        
     
     PongPaddle:
         id: player_right
         x: root.width - self.width
         center_y: root.center_y
+        color: 0, 191, 255
+        

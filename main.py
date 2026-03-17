@@ -1,23 +1,28 @@
 from kivy.app import App
 from kivy.uix.widget import Widget
-from kivy.properties import (NumericProperty, ReferenceListProperty, ObjectProperty)
+from kivy.properties import (NumericProperty, ReferenceListProperty, ObjectProperty, ColorProperty)
 from kivy.vector import Vector
 from random import randint
 from kivy.clock import Clock
+from kivy.core.window import Window
+from kivy.core.audio import SoundLoader
+
 
 class PongPaddle(Widget):
     score = NumericProperty(0)
+    color = ColorProperty((1, 1, 1, 1))  # Default color is white
 
     def bounce_ball(self, ball):
         if self.collide_widget(ball):
             vx, vy = ball.velocity
             offset = (ball.center_y - self.center_y) / (self.height / 2)
             bounced = Vector(-1 * vx, vy)
-            vel = bounced * 1.1
+            vel = bounced * 1.15
             ball.velocity = vel.x, vel.y + offset
+            
 
 
-
+Window.clearcolor = (0.1, 0.1, 0.15, 1)
 
 
 class PongBall(Widget):
@@ -74,12 +79,15 @@ class PongGame(Widget):
             self.serve_ball(vel=(-4, 0))
 
     def on_touch_move(self, touch):
-        if touch.x < self.width /3:
+        if touch.x < self.width /3: 
             self.player1.center_y = touch.y
         if touch.x > self.width - self.width /3:
             self.player2.center_y = touch.y
 
-
+    #Adding sound effects to the game
+        def __init__(self, **kwargs):
+            super().__init__(**kwargs)
+            self.sound = SoundLoader.load('bounce.wav') 
     
 
 class PongApp(App):
@@ -88,7 +96,14 @@ class PongApp(App):
     def build(self):
         game = PongGame()
         game.serve_ball()
+        self.music = SoundLoader.load('sounds\music.wav.wav')
+        if self.music:
+            self.music.loop = True
+            self.music.play()
+
         Clock.schedule_interval(game.update, 1.0/60.0)
+         
+        
         return game
     
 
