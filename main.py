@@ -19,13 +19,17 @@ class PongPaddle(Widget):
             bounced = Vector(-1 * vx, vy)
             vel = bounced * 1.15
             ball.velocity = vel.x, vel.y + offset
+            self.music = SoundLoader.load('D:\Pong game\sounds/bounce.wav')
+            self.music.play()
             
 
 
-Window.clearcolor = (0.1, 0.1, 0.15, 1)
+#Window.clearcolor = (0.67, 1, 0.18, 0)  # Set the background color to a dark shade of blue
 
 
 class PongBall(Widget):
+    color = ColorProperty((1, 1, 1, 1))  # Default color is white
+    
 
     #velocity in x and y axis
     velocity_x = NumericProperty(0)
@@ -44,6 +48,7 @@ class PongGame(Widget):
     ball = ObjectProperty(None)
     player1 = ObjectProperty(None)
     player2 = ObjectProperty(None)
+    color = ColorProperty((1, 1, 1, 1))  # Default color is white
 
 
     def serve_ball(self, vel=(4, 0)):
@@ -74,9 +79,13 @@ class PongGame(Widget):
         if self.ball.x < self.x:
             self.player2.score += 1
             self.serve_ball(vel=(4, 0))
+            self.music = SoundLoader.load('D:\Pong game\sounds/ballfall.wav')
+            self.music.play()
         if self.ball.right > self.width:
             self.player1.score += 1
             self.serve_ball(vel=(-4, 0))
+            self.music = SoundLoader.load('D:\Pong game\sounds/ballfall.wav')
+            self.music.play()
 
     def on_touch_move(self, touch):
         if touch.x < self.width /3: 
@@ -85,9 +94,9 @@ class PongGame(Widget):
             self.player2.center_y = touch.y
 
     #Adding sound effects to the game
-        def __init__(self, **kwargs):
-            super().__init__(**kwargs)
-            self.sound = SoundLoader.load('bounce.wav') 
+        #def __init__(self, **kwargs):
+            #super().__init__(**kwargs)
+            #self.sound = SoundLoader.load('bounce.wav') 
     
 
 class PongApp(App):
@@ -97,9 +106,10 @@ class PongApp(App):
         game = PongGame()
         game.serve_ball()
         self.music = SoundLoader.load('sounds\music.wav.wav')
-        if self.music:
-            self.music.loop = True
-            self.music.play()
+        self.music.play()
+        #if self.music:
+            #self.music.loop = True
+            #self.music.play()
 
         Clock.schedule_interval(game.update, 1.0/60.0)
          
